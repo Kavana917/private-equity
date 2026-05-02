@@ -4,4 +4,6 @@ dist/
 *.tsbuildinfo
 .cursor/
 /context/
+# tsc emit beside AssistantContext.tsx; source of truth is the .tsx file
+src/context/AssistantContext.js
 refs/
