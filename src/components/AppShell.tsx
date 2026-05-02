@@ -64,8 +64,8 @@ export function AppShell() {
           </div>
         </div>
         <nav>
-          {navGroups.map((group) => (
-            <div key={group.title} className="sidebar-group">
+          {navGroups.map((group, index) => (
+            <div key={`${group.title || "group"}-${index}`} className="sidebar-group">
               {group.title ? <p className="sidebar-section-label">{group.title}</p> : null}
               {group.links.map((item) => (
                 <NavLink
