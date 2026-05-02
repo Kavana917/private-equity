@@ -30,3 +30,9 @@ The `/admin/sample-data` page provides equivalent actions through API buttons:
 - Create Tables
 - Delete Tables
 - See Data
+
+## Netlify
+
+The repo includes [netlify.toml](netlify.toml). After you connect GitHub, Netlify should use **Build command** `npm run build` and **Publish directory** `dist` automatically. If the Netlify UI shows those fields empty, either leave them blank (the TOML file still applies) or set them explicitly to match. Without building and publishing `dist`, the live site can show a blank page.
+
+Optional: **Site settings → Environment variables** — add `VITE_API_BASE_URL` when your API is hosted elsewhere.
