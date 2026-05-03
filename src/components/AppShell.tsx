@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import {
+  MessageSquare,
   PanelLeft,
   Shield,
   LayoutDashboard,
@@ -45,15 +46,99 @@ const navGroups: NavGroup[] = [
   }
 ];
 
+const MOBILE_NAV_QUERY = "(max-width: 960px)";
+const OTTO_DRAWER_QUERY = "(max-width: 1280px)";
+
+function subscribeMobileNav(cb: () => void) {
+  const mq = window.matchMedia(MOBILE_NAV_QUERY);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+}
+
+function getMobileNavSnapshot() {
+  return window.matchMedia(MOBILE_NAV_QUERY).matches;
+}
+
+function subscribeOttoDrawer(cb: () => void) {
+  const mq = window.matchMedia(OTTO_DRAWER_QUERY);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+}
+
+function getOttoDrawerSnapshot() {
+  return window.matchMedia(OTTO_DRAWER_QUERY).matches;
+}
+
 export function AppShell() {
   const location = useLocation();
   const hideOtto = location.pathname.startsWith("/admin");
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const isNarrowViewport = useSyncExternalStore(
+    subscribeMobileNav,
+    getMobileNavSnapshot,
+    () => false
+  );
+  const isOttoDrawerLayout = useSyncExternalStore(
+    subscribeOttoDrawer,
+    getOttoDrawerSnapshot,
+    () => false
+  );
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() =>
+    typeof window !== "undefined" ? getMobileNavSnapshot() : false
+  );
   const [isOttoExpanded, setIsOttoExpanded] = useState(false);
+  const [isOttoPanelOpen, setIsOttoPanelOpen] = useState(true);
+
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_NAV_QUERY);
+    function onBreakpointChange() {
+      setIsSidebarCollapsed(mq.matches);
+    }
+    mq.addEventListener("change", onBreakpointChange);
+    return () => mq.removeEventListener("change", onBreakpointChange);
+  }, []);
+
+  useEffect(() => {
+    if (!isNarrowViewport) return;
+    setIsSidebarCollapsed(true);
+  }, [location.pathname, isNarrowViewport]);
+
+  useEffect(() => {
+    if (!isNarrowViewport || isSidebarCollapsed) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isNarrowViewport, isSidebarCollapsed]);
+
+  useEffect(() => {
+    if (!isNarrowViewport) {
+      setIsOttoPanelOpen(true);
+    }
+  }, [isNarrowViewport]);
+
+  const showSidebarBackdrop = isNarrowViewport && !isSidebarCollapsed;
+  const showOttoBackdrop = !hideOtto && isOttoPanelOpen && isOttoDrawerLayout;
 
   return (
     <div className={isSidebarCollapsed ? "app-shell sidebar-collapsed" : "app-shell"}>
-      <aside className="sidebar">
+      {showSidebarBackdrop ? (
+        <button
+          type="button"
+          className="sidebar-backdrop"
+          aria-label="Close navigation menu"
+          onClick={() => setIsSidebarCollapsed(true)}
+        />
+      ) : null}
+      {showOttoBackdrop ? (
+        <button
+          type="button"
+          className="otto-drawer-backdrop"
+          aria-label="Close Otto assistant"
+          onClick={() => setIsOttoPanelOpen(false)}
+        />
+      ) : null}
+      <aside className="sidebar" aria-hidden={isSidebarCollapsed}>
         <div className="sidebar-brand">
           <div className="sidebar-brand-icon">
             <Shield size={15} />
@@ -99,21 +184,51 @@ export function AppShell() {
               <p className="muted">Audit-first operating workflow</p>
             </div>
           </div>
-          <span className="pill">Audit-first mode</span>
+          <div className="topbar-actions">
+            {isNarrowViewport && !hideOtto ? (
+              <button
+                type="button"
+                className={
+                  isOttoPanelOpen ? "otto-toolbar-toggle otto-toolbar-toggle-active" : "otto-toolbar-toggle"
+                }
+                onClick={() => setIsOttoPanelOpen((open) => !open)}
+                aria-expanded={isOttoPanelOpen}
+                aria-controls="otto-assistant-panel"
+                title={isOttoPanelOpen ? "Hide Otto assistant" : "Show Otto assistant"}
+              >
+                <MessageSquare size={18} strokeWidth={1.75} />
+                <span className="otto-toolbar-label">Otto</span>
+              </button>
+            ) : null}
+            <span className="pill">Audit-first mode</span>
+          </div>
         </header>
 
-        <div className={isOttoExpanded ? "content-row otto-expanded" : "content-row"}>
+        <div
+          className={[
+            "content-row",
+            isOttoExpanded ? "otto-expanded" : "",
+            !isOttoPanelOpen ? "otto-panel-closed" : "",
+            isOttoDrawerLayout && isOttoPanelOpen ? "otto-drawer-layout" : ""
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
           <main className="content">
             <Outlet />
           </main>
-          {!hideOtto && (
-            <aside className={isOttoExpanded ? "assistant-pane assistant-expanded" : "assistant-pane"}>
+          {!hideOtto && isOttoPanelOpen ? (
+            <aside
+              id="otto-assistant-panel"
+              className={isOttoExpanded ? "assistant-pane assistant-expanded" : "assistant-pane"}
+            >
               <OttoAssistant
                 isExpanded={isOttoExpanded}
                 onToggleExpand={() => setIsOttoExpanded((value) => !value)}
+                onTogglePanel={isNarrowViewport ? () => setIsOttoPanelOpen(false) : undefined}
               />
             </aside>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

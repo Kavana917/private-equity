@@ -28,24 +28,26 @@ export function AuditVaultPage() {
 
       <article className="card module-card">
         <h3>Evidence Bundles</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Bundle</th>
-              <th>SHA-256 Hash</th>
-              <th>Contents</th>
-            </tr>
-          </thead>
-          <tbody>
-            {evidenceBundles.map((bundle) => (
-              <tr key={bundle.id}>
-                <td>{bundle.id}</td>
-                <td>{bundle.hash}</td>
-                <td>{bundle.items}</td>
+        <div className="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Bundle</th>
+                <th>SHA-256 Hash</th>
+                <th>Contents</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {evidenceBundles.map((bundle) => (
+                <tr key={bundle.id}>
+                  <td>{bundle.id}</td>
+                  <td>{bundle.hash}</td>
+                  <td>{bundle.items}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </article>
     </section>
   );

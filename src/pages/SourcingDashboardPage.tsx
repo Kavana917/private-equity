@@ -44,28 +44,30 @@ export function SourcingDashboardPage() {
 
       <article className="card module-card">
         <h3>Scoring Matrix</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Target</th>
-              <th>Sector Fit</th>
-              <th>Financials</th>
-              <th>Ownership</th>
-              <th>Priority</th>
-            </tr>
-          </thead>
-          <tbody>
-            {scoringRows.map((row) => (
-              <tr key={row.target}>
-                <td>{row.target}</td>
-                <td>{row.sectorFit}</td>
-                <td>{row.financialHealth}</td>
-                <td>{row.ownershipFit}</td>
-                <td>{row.score}</td>
+        <div className="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Target</th>
+                <th>Sector Fit</th>
+                <th>Financials</th>
+                <th>Ownership</th>
+                <th>Priority</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {scoringRows.map((row) => (
+                <tr key={row.target}>
+                  <td>{row.target}</td>
+                  <td>{row.sectorFit}</td>
+                  <td>{row.financialHealth}</td>
+                  <td>{row.ownershipFit}</td>
+                  <td>{row.score}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </article>
 
       <article className="card module-card">

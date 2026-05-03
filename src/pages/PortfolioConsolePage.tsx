@@ -24,26 +24,28 @@ export function PortfolioConsolePage() {
 
       <article className="card module-card">
         <h3>Company Performance</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Company</th>
-              <th>Revenue</th>
-              <th>Adjusted EBITDA</th>
-              <th>Trend</th>
-            </tr>
-          </thead>
-          <tbody>
-            {companySnapshots.map((row) => (
-              <tr key={row.company}>
-                <td>{row.company}</td>
-                <td>{row.revenue}</td>
-                <td>{row.ebitda}</td>
-                <td>{row.trend}</td>
+        <div className="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Revenue</th>
+                <th>Adjusted EBITDA</th>
+                <th>Trend</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {companySnapshots.map((row) => (
+                <tr key={row.company}>
+                  <td>{row.company}</td>
+                  <td>{row.revenue}</td>
+                  <td>{row.ebitda}</td>
+                  <td>{row.trend}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </article>
 
       <div className="grid">

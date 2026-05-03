@@ -1,13 +1,27 @@
 import { useState } from "react";
-import { AlertCircle, Bot, FileText, PanelLeftClose, PanelLeftOpen, Send, Trash2 } from "lucide-react";
+import {
+  AlertCircle,
+  Bot,
+  FileText,
+  PanelLeftClose,
+  PanelLeftOpen,
+  PanelRightClose,
+  Send,
+  Trash2,
+} from "lucide-react";
 import { useAssistant } from "../context/AssistantContext";
 
 type OttoAssistantProps = {
   isExpanded?: boolean;
   onToggleExpand?: () => void;
+  onTogglePanel?: () => void;
 };
 
-export function OttoAssistant({ isExpanded = false, onToggleExpand }: OttoAssistantProps) {
+export function OttoAssistant({
+  isExpanded = false,
+  onToggleExpand,
+  onTogglePanel,
+}: OttoAssistantProps) {
   const { messages, pushMessage, resetMessages } = useAssistant();
   const [draft, setDraft] = useState("");
   const quickActions = [
@@ -45,8 +59,24 @@ export function OttoAssistant({ isExpanded = false, onToggleExpand }: OttoAssist
             <Trash2 size={15} />
           </button>
           {onToggleExpand && (
-            <button type="button" className="assistant-icon-btn" onClick={onToggleExpand} title="Toggle width">
+            <button
+              type="button"
+              className="assistant-icon-btn"
+              onClick={onToggleExpand}
+              title={isExpanded ? "Narrow panel" : "Widen panel"}
+            >
               {isExpanded ? <PanelLeftClose size={15} /> : <PanelLeftOpen size={15} />}
+            </button>
+          )}
+          {onTogglePanel && (
+            <button
+              type="button"
+              className="assistant-icon-btn"
+              onClick={onTogglePanel}
+              title="Hide assistant"
+              aria-label="Hide assistant panel"
+            >
+              <PanelRightClose size={15} />
             </button>
           )}
         </div>

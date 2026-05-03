@@ -58,24 +58,26 @@ export function DiligenceIcWorkspacePage() {
 
         <article className="card module-card">
           <h3>Risk Heatmap</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Risk</th>
-                <th>Severity</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {riskHeatmap.map((item) => (
-                <tr key={item.risk}>
-                  <td>{item.risk}</td>
-                  <td>{item.severity}</td>
-                  <td>{item.status}</td>
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Risk</th>
+                  <th>Severity</th>
+                  <th>Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {riskHeatmap.map((item) => (
+                  <tr key={item.risk}>
+                    <td>{item.risk}</td>
+                    <td>{item.severity}</td>
+                    <td>{item.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </article>
       </div>
 

@@ -31,33 +31,35 @@ export function PipelinePage() {
       {isLoading && <p className="muted">Loading pipeline...</p>}
       {error && <p className="status">{error}</p>}
       <div className="card">
-        <table>
-          <thead>
-            <tr>
-              <th>Deal</th>
-              <th>Sector</th>
-              <th>Risk</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!isLoading && deals.length === 0 && (
+        <div className="table-responsive">
+          <table>
+            <thead>
               <tr>
-                <td colSpan={4}>No deals found yet. Sync from Datagol to populate pipeline.</td>
+                <th>Deal</th>
+                <th>Sector</th>
+                <th>Risk</th>
+                <th>Action</th>
               </tr>
-            )}
-            {deals.map((deal) => (
-              <tr key={deal.id}>
-                <td>{deal.name}</td>
-                <td>{deal.sector}</td>
-                <td>{deal.risk}</td>
-                <td>
-                  <Link to={`/deals/${deal.code.toLowerCase()}`}>Open</Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {!isLoading && deals.length === 0 && (
+                <tr>
+                  <td colSpan={4}>No deals found yet. Sync from Datagol to populate pipeline.</td>
+                </tr>
+              )}
+              {deals.map((deal) => (
+                <tr key={deal.id}>
+                  <td>{deal.name}</td>
+                  <td>{deal.sector}</td>
+                  <td>{deal.risk}</td>
+                  <td>
+                    <Link to={`/deals/${deal.code.toLowerCase()}`}>Open</Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   );

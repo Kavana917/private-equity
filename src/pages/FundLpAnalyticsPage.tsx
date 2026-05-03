@@ -28,24 +28,26 @@ export function FundLpAnalyticsPage() {
 
       <article className="card module-card">
         <h3>Waterfall Engine</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Segment</th>
-              <th>Cashflows</th>
-              <th>Holding Period</th>
-            </tr>
-          </thead>
-          <tbody>
-            {waterfallRows.map((row) => (
-              <tr key={row.segment}>
-                <td>{row.segment}</td>
-                <td>{row.cashflow}</td>
-                <td>{row.holdingPeriod}</td>
+        <div className="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Segment</th>
+                <th>Cashflows</th>
+                <th>Holding Period</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {waterfallRows.map((row) => (
+                <tr key={row.segment}>
+                  <td>{row.segment}</td>
+                  <td>{row.cashflow}</td>
+                  <td>{row.holdingPeriod}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </article>
 
       <div className="grid">
